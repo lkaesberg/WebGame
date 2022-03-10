@@ -10,9 +10,12 @@ ctx.fillStyle = "#FF0000";
 let mouseX = 0;
 let mouseY = 0;
 
+let speedX = 0.0;
+let speedY = 0.0;
+
 const movement = {"up": false, "down": false, "left": false, "right": false}
 
-const player = new Player(50.0, 50.0);
+const player = new Player(5.0, 5.0);
 const gameboard = new Gameboard(1000, 1000, 180, player)
 
 document.addEventListener('mousemove', ({clientX, clientY}) => {
@@ -56,11 +59,19 @@ document.addEventListener('keyup', ({key}) => {
 
 
 setInterval(() => {
-  let speed = 0.05
-  if (movement["up"]) player.posY -= speed
-  if (movement["down"]) player.posY += speed
-  if (movement["left"]) player.posX -= speed
-  if (movement["right"]) player.posX += speed
+  let speedChange = 0.01
+  let speedLimit = 1
+  let breakSpeed = 1.3
+  if (movement["up"]) speedY -= speedChange
+  if (movement["down"]) speedY += speedChange
+  if (movement["left"]) speedX -= speedChange
+  if (movement["right"]) speedX += speedChange
+  if (Math.abs(speedX) > speedLimit) speedX = speedLimit * Math.sign(speedX)
+  if (Math.abs(speedY) > speedLimit) speedY = speedLimit * Math.sign(speedY)
+  speedX /= breakSpeed
+  speedY /= breakSpeed
+  player.posX += speedX
+  player.posY += speedY
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const height = canvas.height;
